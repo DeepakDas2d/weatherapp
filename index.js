@@ -1,4 +1,3 @@
-let key ="b268ab1cb14900c8b394b2d903eed926";
 let result = document.getElementById("result");
 let searchBtn = document.getElementById("search-btn");
 let cityRef = document.getElementById("city");
@@ -19,7 +18,13 @@ let getWeather = () => {
 
         //Clear the input fields
        cityRef.value ="";
-         fetch(url).then((response) => response.json()).then((data) => {
+         fetch(url)
+            .then((response) => {
+            if(!response.ok){
+                throw new Error("Network response was not ok!")
+            }
+           return response.json();
+        }).then((data) => {
             console.log(data);
             console.log(data.weather[0].icon);
             console.log(data.weather[0].main);
@@ -27,6 +32,8 @@ let getWeather = () => {
             console.log(data.name);
             console.log(data.main.temp_min);
             console.log(data.main.temp_max);
+            console.log(data.main.temp_max);
+            // console.log("wind",data.wind.speed);
 
             result.innerHTML = `
             <h2> ${data.name}</h2>
@@ -47,9 +54,14 @@ let getWeather = () => {
             `;
          })
          // If city namr is Not valid
-         .catch(() => {
+         .catch((error) => {
             result.innerHTML = `<h3 class="msg">City is not found`;
-         });
+            console.error('Fetch error: ', error)
+
+         })
+        //  .catch(error => {
+        //     //Handle any error occured during the fetch
+        //  });
     }
    
 };
